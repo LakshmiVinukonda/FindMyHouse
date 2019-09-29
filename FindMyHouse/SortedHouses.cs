@@ -1,12 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace FindMyHouse
 {
-    public class SortedHouses
+    public class SortedHouses : ISortedHouses
     {
         private House _sisterHouse;
         private List<House> _allhousesList;
@@ -36,7 +33,8 @@ namespace FindMyHouse
         #region List of houses based on number of rooms
         public List<House> SortHousesBasedonRooms()
         {
-            return _allhousesList.Where(house => house?.@params?.rooms > 5).OrderBy(house => house.@params.rooms).ToList();
+            return _allhousesList.Where(house => house?.@params?.rooms > 5).OrderBy(house => house.@params.rooms)
+                .ThenBy(house => house.@params.value).ToList();
         }
         #endregion
 
@@ -49,5 +47,12 @@ namespace FindMyHouse
         }
         #endregion
 
+    }
+
+    public interface ISortedHouses
+    {
+        List<House> SortHousesBasedOnDistance();
+        List<House> SortHousesBasedonRooms();
+        List<House> SortHousesBasedOnStreet();
     }
 }
